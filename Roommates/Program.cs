@@ -217,6 +217,15 @@ namespace Roommates
                         Console.Write("Press any key to continue");
                         Console.ReadKey();
                         break;
+                    case ("See chore counts for all roommate"):
+                        var choreCounts = choreRepo.GetChoreCounts();
+                        foreach (var choreCount in choreCounts)
+                        {
+                            Console.WriteLine($"{choreCount.Name}: {choreCount.Count}");
+                        }
+                        Console.Write("Press any key to continue");
+                        Console.ReadKey();
+                        break;
                     case ("Exit"):
                         runProgram = false;
                         break;
@@ -244,6 +253,7 @@ namespace Roommates
                 "Delete a room",
                 "Update a chore",
                 "Delete a chore",
+                "See chore counts for all roommate",
                 "Exit"
             };
 

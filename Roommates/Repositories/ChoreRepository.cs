@@ -177,5 +177,40 @@ VALUES (@roommateId, @choreId)";
                 }
             }
         }
+
+        public List<ChoreCount> GetChoreCounts()
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT Roommate.FirstName, COUNT(RoommateChore.Id) AS Count
+                        FROM Roommate
+                        LEFT JOIN RoommateChore ON Roommate.Id = RoommateChore.RoommateId
+                        GROUP BY Roommate.Id, Roommate.FirstName";
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        var choreCounts = new List<ChoreCount>();
+                        
+                        while (reader.Read())
+                        {
+                            var choreCount = new ChoreCount()
+                            {
+                                Name = reader.GetString(reader.GetOrdinal("FirstName")),
+                                Count = reader.GetInt32(reader.GetOrdinal("Count"))
+
+                            };
+
+                            choreCounts.Add(choreCount);
+                        }
+
+                        return choreCounts;
+                    }
+                }
+            }
+        }
     }
 }

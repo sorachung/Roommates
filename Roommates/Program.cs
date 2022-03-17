@@ -226,6 +226,34 @@ namespace Roommates
                         Console.Write("Press any key to continue");
                         Console.ReadKey();
                         break;
+                    case ("Reassign Chore"):
+                        List<Chore> assignedChores = choreRepo.GetAssignedChores();
+                        foreach (Chore c in assignedChores)
+                        {
+                            Console.WriteLine($"{c.Name} has an Id of {c.Id}");
+                        }
+                        Console.Write("Which chore would you like to reassign? ");
+                        int selectedReassignChoreId = int.Parse(Console.ReadLine());
+                        string assignedName = choreRepo.GetChoreRoommateName(selectedReassignChoreId);
+
+                        Console.WriteLine($"This chore is currently assigned to {assignedName}. Who would you like to assign it to?");
+
+                        List<Roommate> allRoommatesList = roommateRepo.GetAll();
+                        foreach (Roommate r in allRoommatesList)
+                        {
+                            Console.WriteLine($"{r.FirstName} {r.LastName} has an Id of {r.Id}");
+                        }
+
+                        Console.Write("Which Roommate would you like to reassign the chore to? ");
+                        int selectedReassignRoommateId = int.Parse(Console.ReadLine());
+
+                        choreRepo.ReassignChore(selectedReassignRoommateId, selectedReassignChoreId);
+
+                        Console.WriteLine("The chore has been reassigned.");
+
+                        Console.Write("Press any key to continue");
+                        Console.ReadKey();
+                        break;
                     case ("Exit"):
                         runProgram = false;
                         break;
@@ -254,6 +282,7 @@ namespace Roommates
                 "Update a chore",
                 "Delete a chore",
                 "See chore counts for all roommate",
+                "Reassign Chore",
                 "Exit"
             };
 

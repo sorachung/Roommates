@@ -203,7 +203,8 @@ VALUES (@roommateId, @choreId)";
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "DELETE FROM Chore WHERE Id = @id";
+                    cmd.CommandText = @"DELETE FROM RoommateChore WHERE ChoreId = @id;
+DELETE FROM Chore WHERE Id = @id";
                     cmd.Parameters.AddWithValue("@id", id);
                     cmd.ExecuteNonQuery();
                 }

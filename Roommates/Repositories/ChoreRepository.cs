@@ -18,7 +18,7 @@ namespace Roommates.Repositories
             {
                 conn.Open();
 
-                using(SqlCommand cmd = conn.CreateCommand())
+                using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = "SELECT Id, Name FROM CHORE";
 
@@ -26,7 +26,7 @@ namespace Roommates.Repositories
                     {
                         List<Chore> chores = new List<Chore>();
 
-                        while(reader.Read())
+                        while (reader.Read())
                         {
                             int idColumnPosition = reader.GetOrdinal("Id");
 
@@ -107,12 +107,12 @@ VALUES (@name)";
                     cmd.CommandText = @"SELECT * FROM Chore
                         LEFT JOIN RoommateChore ON ChoreId = Chore.Id
                         WHERE RoommateChore.Id IS NULL;";
-                    
+
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         List<Chore> unassignedChores = new List<Chore>();
 
-                        while(reader.Read())
+                        while (reader.Read())
                         {
                             Chore chore = new Chore()
                             {
@@ -140,6 +140,40 @@ VALUES (@name)";
 VALUES (@roommateId, @choreId)";
                     cmd.Parameters.AddWithValue("@roommateId", roommateId);
                     cmd.Parameters.AddWithValue("@choreId", choreId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void Update(Chore chore)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE Chore
+                                    SET Name = @name
+                                    WHERE Id = @id";
+                    cmd.Parameters.AddWithValue("@id", chore.Id);
+                    cmd.Parameters.AddWithValue("@name", chore.Name);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void Delete(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "DELETE FROM Chore WHERE Id = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
